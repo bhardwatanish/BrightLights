@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.util.Random;
 
 import group_one.brightlights.R;
-
+//testcommit
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button[][] buttons = new Button[3][3];
     private TextView textViewPlayer1;
