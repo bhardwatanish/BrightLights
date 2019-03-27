@@ -12,15 +12,17 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level_menu);
-        Button l1,l2,l3,ml;
+        Button l1,l2,l3,ml,multiBut;
         l1=(Button) findViewById(R.id.l1);
         l2=(Button) findViewById(R.id.l2);
         l3=(Button) findViewById(R.id.l3);
         ml=(Button) findViewById(R.id.ml);
+        multiBut = (Button) findViewById(R.id.multiBut);
         l1.setOnClickListener(this);
         l2.setOnClickListener(this);
         l3.setOnClickListener(this);
         ml.setOnClickListener(this);
+        multiBut.setOnClickListener(this);
 
 
     }
@@ -43,6 +45,10 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
             case R.id.ml:
                 Intent l=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",0);
                 startActivity(l);
+                break;
+            case R.id.multiBut:
+                Intent m=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",0);
+                startActivity(m);
                 break;
         }
     }
