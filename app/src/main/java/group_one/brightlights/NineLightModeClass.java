@@ -79,14 +79,14 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                     break;
                 case R.id.reset:
                     resetarray();
+                    break;
                 case R.id.ss:
-                    int move=do_move(0,44);
-                    swap(1,1);
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            move,
-                            Toast.LENGTH_SHORT);
+                    int move = do_move();
 
-                    toast.show();
+                    int x = move/3;
+                    int y = move -(x * 3);
+                    swap(x,y);
+                    break;
             }
 
     }
@@ -169,41 +169,117 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
 
     }
-    private int   do_move(int min_rounds,int last_move){
-        int best_move = 0;
-        if(checkforwin()){
-           return min_rounds;
-        }
-        else if(min_rounds>=1){
-            return 100;
-        }
-        else{
-            int minscore=100;
-            //int best_move;
-            for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++) {
-                    if (clicked[i][j]!=1) {
+
+    private static int Reduction_steps[][]= {
+            {2,	1,	0}, //1
+            {4,	1,	0}, //2
+            {3,	2,	1}, //3
+            {4,	2,	0}, //4
+            {5,	2,	0}, //5
+            {4,	3,	0}, //6
+            {5,	3,	0}, //7
+            {6,	3,	0}, //8
+            {6,	4,	0}, //9
+            {7,	4,	0}, //10
+            {5,	8,	1}, //11
+            {6,	7,	1}, //12
+            {9,	6,	0}, //13
+            {5,	9,	0}, //14
+            {7,	9,	0}, //15
+            {5,	8,	0}, //16
+            {6,	8,	0}, //17
+            {4,	7,	0}, //18
+            {5,	7,	0}, //19
+            {2,	6,	0}, //20
+            {4,	6,	0}, //21
+            {3,	5,	0}, //22
+            {1,	4,	0}, //23
+            {3,	4,	0}, //24
+            {2,	3,	0}, //25
+            {1,	2,	0}, //26
+    };
 
 
-                        swap(i, j);
-                        clicked[i][j]=1;
-                        int k = do_move(min_rounds++, i * 10 + j);
-                        if (minscore >= k) {
-                            minscore = k;
-                            best_move = i * 10 + j;
+    private int do_move(){
 
-                        }
-                        swap(i, j);
-                        clicked[i][j]=0;
+        int lights_up_on[] = new int[9];
+        int lights_up_off[] = new int[9];
+        int numb_move_lights_off = 0;
+        int numb_move_lights_on = 0;
+        int temp1,temp2;
 
-                    }
+        //Initializing the lights on and off arrays
+        //So it will calculate shortest distance both to fully off and fully on lights
+        for(int x=0;x<3;x++) {
+            for(int y=0;y<3;y++) {
+
+                lights_up_on[(x*3)+y] = color[x][y];
+
+                if(color[x][y] == 0){
+                    lights_up_off[(x*3)+y] = 1;
+                }else{
+                    lights_up_off[(x*3)+y] = 0;
                 }
             }
         }
 
-        int best_move1 = best_move;
-        return best_move1;
+        for(int y = 0; y < 26 ; y++)
+        {
+            if(Reduction_steps[y][2] == 0)
+            {
+                //Lights on
+                lights_up_on[(Reduction_steps[y][0] - 1)] = lights_up_on[(Reduction_steps[y][0] - 1)] - lights_up_on[(Reduction_steps[y][1] - 1)];
+                if(lights_up_on[(Reduction_steps[y][0] - 1)] == -1) {
+                    lights_up_on[(Reduction_steps[y][0] - 1)] = 1;
+                }
+
+                //Lights off
+                lights_up_off[(Reduction_steps[y][0] - 1)] = lights_up_off[(Reduction_steps[y][0] - 1)] - lights_up_off[(Reduction_steps[y][1] - 1)];
+                if(lights_up_off[(Reduction_steps[y][0] - 1)] == -1) {
+                    lights_up_off[(Reduction_steps[y][0] - 1)] = 1;
+                }
+
+            }
+            else
+            {
+                //Lights on
+                temp1 = lights_up_on[(Reduction_steps[y][0] - 1)];
+                lights_up_on[(Reduction_steps[y][0] - 1)] = lights_up_on[(Reduction_steps[y][1] - 1)];
+                lights_up_on[(Reduction_steps[y][1] - 1)] = temp1;
+
+                //Light off
+                temp2 = lights_up_off[(Reduction_steps[y][0] - 1)];
+                lights_up_off[(Reduction_steps[y][0] - 1)] = lights_up_off[(Reduction_steps[y][1] - 1)];
+                lights_up_off[(Reduction_steps[y][1] - 1)] = temp2;
+
+            }
+        }
+
+
+        //Checking which path shorter
+        for(int x=0;x<9;x++) {
+            if(lights_up_on[x] == 1) {
+                numb_move_lights_on++;
+            }
+            if(lights_up_off[x] == 1) {
+                numb_move_lights_off++;
+            }
+        }
+
+        //If light off takes less amount of moves it will do that if not it will go with lights on
+        //Lights off is default if the amount of moves is equal
+        for(int x=0;x<9;x++) {
+            if(lights_up_on[x] == 1 && numb_move_lights_on < numb_move_lights_off) {
+                return x;
+            }
+            if(lights_up_off[x] == 1 && numb_move_lights_on >= numb_move_lights_off) {
+                return x;
+            }
+        }
+        //Returns a one if an error has occurred
+        return -1;
     }
+
 private boolean checkforwin(){
         int flag;
         flag=color[0][0];
