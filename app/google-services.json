@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "728034999160-a8aljh758h1f46o44df2cp0uuejfc24f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "group_one.brightlights",
+            "certificate_hash": "aed3a791708e1366146a2929c2295b011d0fe75c"
+          }
+        },
+        {
           "client_id": "728034999160-behlus19neib9e5h6qjc2ipbfukj4ru3.apps.googleusercontent.com",
           "client_type": 3
         }
