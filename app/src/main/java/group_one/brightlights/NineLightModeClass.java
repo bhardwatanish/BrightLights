@@ -19,7 +19,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nine_light_mode);
-        textViewPlayer1 = findViewById(R.id.text1);
+        //textViewPlayer1 = findViewById(R.id.text1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 String buttonID = "button_" + i + j;
