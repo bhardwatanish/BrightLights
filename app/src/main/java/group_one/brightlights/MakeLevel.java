@@ -78,6 +78,7 @@ public class MakeLevel extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.reset:
                 resetarray();
+                break;
             case R.id.ss:
                 submitLevel();
         }
@@ -171,13 +172,13 @@ public class MakeLevel extends AppCompatActivity implements View.OnClickListener
         output.color = color;
         EditText name = findViewById(R.id.username);
         output.username = name.getText().toString();
-        System.out.print("\n\n10000\n\n\n\n\n\n\n\n\n");
-        System.out.print(output.username);
+        System.out.print(output.username+"\n");
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++) {
                 System.out.print(output.color[i][j]);
             }
         }
+        System.out.println();
 //        return output;
         return;
     }
