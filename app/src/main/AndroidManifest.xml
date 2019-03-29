@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="group_one.brightlights">
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -11,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SixteenLightModeClass"></activity>
         <activity android:name=".NineLightModeClass" />
+        <activity android:name=".LogInClass" />
 
         <activity android:name=".LevelMenuClass">
             <intent-filter>
