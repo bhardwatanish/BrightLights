@@ -20,7 +20,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private TextView textViewPlayer1;
     private int[][] color = new int[3][3];
     private int[][] clicked = new int[3][3];
-    private String gameId;
+    private String gameId ="k6986774";
     private static final String TAG = "ColorCoding";
 
     @Override
@@ -31,7 +31,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
         FirebaseDatabase.getInstance().getReference().child("games")
                 .child(gameId)
-                .child("reset")
+                .child("RESET")
                 .setValue(System.currentTimeMillis());
 
 
@@ -117,11 +117,19 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             buttons[i][j].setBackgroundColor(Color.parseColor("red"));
             buttons[i][j].setTextColor(Color.parseColor("red"));
             buttons[i][j].setText("x");
+            FirebaseDatabase.getInstance().getReference().child("games")
+                    .child(gameId)
+                    .child(i + "_" + j)
+                    .setValue("1");
 
         } else {
             buttons[i][j].setBackgroundColor(Color.parseColor("#a4c639"));
             buttons[i][j].setTextColor(Color.parseColor("#a4c639"));
             buttons[i][j].setText("0");
+            FirebaseDatabase.getInstance().getReference().child("games")
+                    .child(gameId)
+                    .child(i + "_" + j)
+                    .setValue("0");
         }
 
     }
@@ -137,8 +145,14 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 setarray(i, j);
+                FirebaseDatabase.getInstance().getReference().child("games")
+                        .child(gameId)
+                        .child(i + "_" + j)
+                        .setValue("0");
             }
         }
+
+
         setlevel();
     }
 
@@ -257,7 +271,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                             return;
                         }
                         String key = dataSnapshot.getKey();
-                        if (!key.equals("reset")) {
+                        if (!key.equals("RESET")) {
                             int row = Integer.parseInt(key.substring(0, 1));
                             int col = Integer.parseInt(key.substring(2, 3));
                             Integer shape = dataSnapshot.getValue(Integer.class);
@@ -272,7 +286,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                         if (dataSnapshot.getValue() == null) {
                             return;
                         }
-                        if (dataSnapshot.getKey().equals("reset")) {
+                        if (dataSnapshot.getKey().equals("RESET")) {
                             resetarray();
 
                         }

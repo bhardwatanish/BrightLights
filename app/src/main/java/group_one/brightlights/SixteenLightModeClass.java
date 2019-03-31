@@ -1,23 +1,39 @@
 package group_one.brightlights;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+import android.util.Log;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import java.util.Random;
+
 
 public class SixteenLightModeClass extends AppCompatActivity implements View.OnClickListener {
 
     private Button[][] buttons = new Button[4][4];
     private TextView textViewPlayer1;
     private int[][] color= new int[4][4];
-
+    private String gameId ="16lights";
+    private static final String TAG = "ColorCoding";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .setValue(null);
+
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .child("RESET")
+                .setValue(System.currentTimeMillis());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sixteen_light_mode);
         textViewPlayer1 = findViewById(R.id.text1);
@@ -102,12 +118,20 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
             buttons[i][j].setBackgroundColor(Color.parseColor("red"));
             buttons[i][j].setTextColor(Color.parseColor("red"));
             buttons[i][j].setText("x");
+            FirebaseDatabase.getInstance().getReference().child("games")
+                    .child(gameId)
+                    .child(i + "_" + j)
+                    .setValue("1");
 
         }
         else{
             buttons[i][j].setBackgroundColor(Color.parseColor("#a4c639"));
             buttons[i][j].setTextColor(Color.parseColor("#a4c639"));
             buttons[i][j].setText("0");
+            FirebaseDatabase.getInstance().getReference().child("games")
+                    .child(gameId)
+                    .child(i + "_" + j)
+                    .setValue("0");
         }
 
     }
@@ -207,6 +231,61 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
             int i= rand.nextInt(4) + 0;
             int j= rand.nextInt(4) + 0;
             swap(i,j);}
+
+    }
+
+
+
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
+        Log.d(TAG, "setGameId: " + gameId);
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+                        if (dataSnapshot.getValue() == null) {
+                            return;
+                        }
+                        String key = dataSnapshot.getKey();
+                        if (!key.equals("RESET")) {
+                            int row = Integer.parseInt(key.substring(0, 1));
+                            int col = Integer.parseInt(key.substring(2, 3));
+                            Integer shape = dataSnapshot.getValue(Integer.class);
+
+
+                        }
+                    }
+
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
+                        if (dataSnapshot.getValue() == null) {
+                            return;
+                        }
+                        if (dataSnapshot.getKey().equals("RESET")) {
+                            resetarray();
+
+                        }
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
 
     }
 
