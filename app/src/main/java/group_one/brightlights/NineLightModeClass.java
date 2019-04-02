@@ -20,7 +20,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private TextView textViewPlayer1;
     private int[][] color = new int[3][3];
     private int[][] clicked = new int[3][3];
-    private String gameId;
+    private String gameId ="kfkgmm";
     private static final String TAG = "ColorCoding";
 
     @Override
