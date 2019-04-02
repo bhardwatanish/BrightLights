@@ -12,6 +12,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SixteenLightModeClass"></activity>
         <activity android:name=".NineLightModeClass" />
+        <activity android:name=".TwentyFiveLights" />
+
         <activity android:name=".LogInClass" />
 
         <activity android:name=".LevelMenuClass">
