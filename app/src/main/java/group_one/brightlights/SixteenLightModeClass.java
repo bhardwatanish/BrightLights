@@ -13,7 +13,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.Random;
-import android.content.Intent;
 
 
 public class SixteenLightModeClass extends AppCompatActivity implements View.OnClickListener {
@@ -52,10 +51,6 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
         Button reset;
         reset=(Button) findViewById(R.id.reset);
         reset.setOnClickListener(this);
-
-        Button home;
-        home=(Button) findViewById(R.id.home);
-        home.setOnClickListener(this);
 
     }
 
@@ -113,18 +108,9 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                 break;
             case R.id.reset:
                 resetarray();
-                break;
-            case R.id.home:
-                goHome();
-                break;
         }
 
     }
-    private void goHome() {
-        Intent intent = new Intent(this, LevelMenuClass.class);
-        startActivity(intent);
-    }
-
     private void setboardcolor(int i,int j){
         // Random rand = new Random();
         // color[i][j]= rand.nextInt(2) + 0;
