@@ -9,10 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LevelMenuClass"></activity>
-        <activity android:name=".NineLightModeClass"></activity>
         <activity android:name=".LogInClass" />
-
+        <activity android:name=".MakeLevel" />
+        <activity android:name=".NineLightModeClass" />
+        <activity android:name=".LevelMenuClass" />
         <activity android:name=".SixteenLightModeClass">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

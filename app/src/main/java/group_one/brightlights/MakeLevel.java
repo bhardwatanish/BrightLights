@@ -7,21 +7,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.Random;
+import android.widget.EditText;
 
-public class NineLightModeClass extends AppCompatActivity implements View.OnClickListener {
+public class MakeLevel extends AppCompatActivity implements View.OnClickListener {
     private Button[][] buttons = new Button[3][3];
     private TextView textViewPlayer1;
     private int[][] color= new int[3][3];
     private int[][] clicked=new int[3][3];
-    private int level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nine_light_mode);
+        setContentView(R.layout.make_level);
         textViewPlayer1 = findViewById(R.id.text1);
-        level =(int) getIntent().getIntExtra("level",0);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 String buttonID = "button_" + i + j;
@@ -32,12 +30,11 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 setboardcolor(i,j);
             }
         }
-        setlevel();
         Button reset;
-        reset=(Button) findViewById(R.id.reset);
+        reset=findViewById(R.id.reset);
         reset.setOnClickListener(this);
         Button ss;
-        ss=(Button) findViewById(R.id.ss);
+        ss=findViewById(R.id.ss);
         ss.setOnClickListener(this);
         for(int i=0;i<3;i++){
             for(int j=0;j<3;j++){
@@ -51,51 +48,45 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         //if (((Button) v).getText().toString().equals("x")){
-            switch(v.getId()){
-                case R.id.button_00:
-                    swap(0,0);
-                    break;
-                case R.id.button_01:
-                    swap(0,1);
-                    break;
-                case R.id.button_02:
-                    swap(0,2);
-                    break;
-                case R.id.button_10:
-                    swap(1,0);
-                    break;
-                case R.id.button_12:
-                    swap(1,2);
-                    break;
-                case R.id.button_11:
-                    swap(1,1);
-                    break;
-                case R.id.button_20:
-                    swap(2,0);
-                    break;
-                case R.id.button_21:
-                    swap(2,1);
-                    break;
-                case R.id.button_22:
-                    swap(2,2);
-                    break;
-                case R.id.reset:
-                    resetarray();
-                    break;
-                case R.id.ss:
-                    int move=do_move(0,44);
-                    swap(1,1);
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            move,
-                            Toast.LENGTH_SHORT);
-
-                    toast.show();
-            }
+        switch(v.getId()){
+            case R.id.button_00:
+                swap(0,0);
+                break;
+            case R.id.button_01:
+                swap(0,1);
+                break;
+            case R.id.button_02:
+                swap(0,2);
+                break;
+            case R.id.button_10:
+                swap(1,0);
+                break;
+            case R.id.button_12:
+                swap(1,2);
+                break;
+            case R.id.button_11:
+                swap(1,1);
+                break;
+            case R.id.button_20:
+                swap(2,0);
+                break;
+            case R.id.button_21:
+                swap(2,1);
+                break;
+            case R.id.button_22:
+                swap(2,2);
+                break;
+            case R.id.reset:
+                resetarray();
+                break;
+            case R.id.ss:
+                submitLevel();
+        }
 
     }
     private void setboardcolor(int i,int j){
-       // Random rand = new Random();
-       // color[i][j]= rand.nextInt(2) + 0;
+        // Random rand = new Random();
+        // color[i][j]= rand.nextInt(2) + 0;
         if(color[i][j]==1) {
             buttons[i][j].setBackgroundColor(Color.parseColor("red"));
             buttons[i][j].setTextColor(Color.parseColor("red"));
@@ -115,13 +106,12 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         color[i][j]=1;
         setboardcolor(i,j);
     }
-    private  void resetarray(){
+    private void resetarray(){
         for(int i=0;i<3;i++){
             for(int j=0;j<3;j++){
                 setarray(i,j);
             }
         }
-        setlevel();
     }
 
     private void swap(int i,int j){
@@ -172,57 +162,26 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
 
     }
-    private int  do_move(int min_rounds){
-        int best_move = 0;
-        if(checkforwin()){
-            min_rounds++;
-        }
-        else{
-            int minscore=100;
-            for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++) {
-                    if (clicked[i][j]!=1) {
 
-
-                        swap(i, j);
-                        clicked[i][j]=1;
-                        int k = do_move(min_rounds++, i * 10 + j);
-                        if (minscore >= k) {
-                            minscore = k;
-                            best_move = i * 10 + j;
-
-                        }
-                        swap(i, j);
-                        clicked[i][j]=0;
-
-                    }
-                }
-            }
-        }
-
-        int best_move1 = best_move;
-        return best_move1;
+    private static class levelSubmission {
+        int[][] color;
+        String username;
     }
-private boolean checkforwin(){
-        int flag;
-        flag=color[0][0];
-        for(int i=0;i<3;i++){
-            for(int j=0;j<3;j++){
-                if(flag!=color[i][j]){
-                    return false;
-                }
+    protected void submitLevel(){
+        levelSubmission output = new levelSubmission();
+        output.color = color;
+        EditText name = findViewById(R.id.username);
+        output.username = name.getText().toString();
+        System.out.print(output.username+"\n");
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++) {
+                System.out.print(output.color[i][j]);
             }
         }
-        return true;
-}
-private  void setlevel(){
-    Random rand = new Random();
-    for(int l=0;l<level;l++){
-    int i= rand.nextInt(3) + 0;
-    int j= rand.nextInt(3) + 0;
-    swap(i,j);}
-
-}
+        System.out.println();
+//        return output;
+        return;
+    }
 
 }
 
