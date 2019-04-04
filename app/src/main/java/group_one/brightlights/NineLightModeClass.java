@@ -13,11 +13,15 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.net.PasswordAuthentication;
 import java.util.Random;
 
 public class NineLightModeClass extends AppCompatActivity implements View.OnClickListener {
     private Button[][] buttons = new Button[3][3];
     private TextView textViewPlayer1;
+    private TextView scores;
+    private int count=0;
     private int[][] color = new int[3][3];
     private int[][] clicked = new int[3][3];
     private String gameId ="kfkgmm";
@@ -49,6 +53,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             }
         }
         setlevel();
+        //TextView scores;
+        scores = findViewById(R.id.score);
         Button reset;
         reset = (Button) findViewById(R.id.reset);
         reset.setOnClickListener(this);
@@ -66,7 +72,6 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-
         //if (((Button) v).getText().toString().equals("x")){
         switch (v.getId()) {
             case R.id.button_00:
@@ -98,6 +103,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.reset:
                 resetarray();
+                count=-1;
             case R.id.ss:
                 int move = do_move(0, 44);
                 swap(1, 1);
@@ -107,7 +113,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
                 toast.show();
         }
-
+        count++;
+        scores.setText("SCORE: "+ count);
     }
 
     private void setboardcolor(int i, int j) {

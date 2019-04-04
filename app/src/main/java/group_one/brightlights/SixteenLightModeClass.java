@@ -14,6 +14,8 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
     private Button[][] buttons = new Button[4][4];
     private TextView textViewPlayer1;
     private int[][] color= new int[4][4];
+    private TextView scores;
+    private int count=0;
 
 
     @Override
@@ -32,6 +34,7 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
             }
         }
         setlevel();
+        scores = findViewById(R.id.score);
         Button reset;
         reset=(Button) findViewById(R.id.reset);
         reset.setOnClickListener(this);
@@ -92,8 +95,10 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                 break;
             case R.id.reset:
                 resetarray();
+                count=-1;
         }
-
+        count++;
+        scores.setText("SCORE: "+ count);
     }
     private void setboardcolor(int i,int j){
         // Random rand = new Random();

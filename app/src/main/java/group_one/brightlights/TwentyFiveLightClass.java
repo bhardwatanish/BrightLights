@@ -12,6 +12,8 @@ public class TwentyFiveLightClass extends AppCompatActivity implements View.OnCl
     private Button[][] buttons = new Button[5][5];
     private TextView textViewPlayer1;
     private int[][] color= new int[5][5];
+    private TextView scores;
+    private int count=0;
 
 
     @Override
@@ -30,6 +32,7 @@ public class TwentyFiveLightClass extends AppCompatActivity implements View.OnCl
             }
         }
         setlevel();
+        scores = findViewById(R.id.score);
         Button reset;
         reset=(Button) findViewById(R.id.reset);
         reset.setOnClickListener(this);
@@ -117,8 +120,10 @@ public class TwentyFiveLightClass extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.reset:
                 resetarray();
+                count=-1;
         }
-
+        count++;
+        scores.setText("SCORE: "+ count);
     }
     private void setboardcolor(int i,int j){
         // Random rand = new Random();

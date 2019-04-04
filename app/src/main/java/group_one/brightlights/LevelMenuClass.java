@@ -31,15 +31,15 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.l1:
-                Intent i=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",1);
+                Intent i=new Intent(getApplicationContext(), group_one.brightlights.TwentyFiveLightClass.class).putExtra("level",1);
                 startActivity(i);
                 break;
             case R.id.l2:
-                Intent j=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",2);
+                Intent j=new Intent(getApplicationContext(), group_one.brightlights.TwentyFiveLightClass.class).putExtra("level",2);
                 startActivity(j);
                 break;
             case R.id.l3:
-                Intent k=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",3);
+                Intent k=new Intent(getApplicationContext(), group_one.brightlights.TwentyFiveLightClass.class).putExtra("level",3);
                 startActivity(k);
                 break;
             case R.id.ml:
