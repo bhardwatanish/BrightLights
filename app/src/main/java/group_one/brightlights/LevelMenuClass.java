@@ -43,7 +43,7 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
                 startActivity(k);
                 break;
             case R.id.ml:
-                Intent l=new Intent(this, MakeLevel.class);
+                Intent l=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",0);
                 startActivity(l);
                 break;
             case R.id.multiBut:

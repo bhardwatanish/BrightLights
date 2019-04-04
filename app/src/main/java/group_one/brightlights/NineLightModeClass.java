@@ -14,14 +14,12 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private TextView textViewPlayer1;
     private int[][] color= new int[3][3];
     private int[][] clicked=new int[3][3];
-    private int level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nine_light_mode);
         textViewPlayer1 = findViewById(R.id.text1);
-        level =(int) getIntent().getIntExtra("level",0);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 String buttonID = "button_" + i + j;
@@ -81,7 +79,6 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                     break;
                 case R.id.reset:
                     resetarray();
-                    break;
                 case R.id.ss:
                     int move=do_move(0,44);
                     swap(1,1);
@@ -172,13 +169,17 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
 
     }
-    private int  do_move(int min_rounds){
+    private int   do_move(int min_rounds,int last_move){
         int best_move = 0;
         if(checkforwin()){
-            min_rounds++;
+           return min_rounds;
+        }
+        else if(min_rounds>=1){
+            return 100;
         }
         else{
             int minscore=100;
+            //int best_move;
             for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++) {
                     if (clicked[i][j]!=1) {
@@ -216,8 +217,10 @@ private boolean checkforwin(){
         return true;
 }
 private  void setlevel(){
+        int k= (int) getIntent().getIntExtra("level",0);
+        //int k=Integer.parseInt(s);
     Random rand = new Random();
-    for(int l=0;l<level;l++){
+    for(int l=0;l<k;l++){
     int i= rand.nextInt(3) + 0;
     int j= rand.nextInt(3) + 0;
     swap(i,j);}
