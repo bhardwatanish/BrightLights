@@ -33,8 +33,6 @@ public class LogInClass extends AppCompatActivity {
     DatabaseReference users,moves;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
