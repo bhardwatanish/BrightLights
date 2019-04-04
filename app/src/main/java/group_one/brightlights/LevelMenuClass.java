@@ -35,7 +35,7 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
                 startActivity(i);
                 break;
             case R.id.l2:
-                Intent j=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",2);
+                Intent j=new Intent(getApplicationContext(), group_one.brightlights.SixteenLightModeClass.class).putExtra("level",2);
                 startActivity(j);
                 break;
             case R.id.l3:
@@ -47,7 +47,7 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
                 startActivity(l);
                 break;
             case R.id.multiBut:
-                Intent m=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",0);
+                Intent m=new Intent(getApplicationContext(), group_one.brightlights.LogInClass.class);
                 startActivity(m);
                 break;
         }
