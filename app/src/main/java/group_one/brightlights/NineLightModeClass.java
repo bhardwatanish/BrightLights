@@ -39,6 +39,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nine_light_mode);
+
         textViewPlayer1 = findViewById(R.id.text1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -63,6 +64,12 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             }
         }
         clicked[1][1] = 1;
+
+        gameId = getIntent().getExtras().getString("gameId");
+        if (gameId == null) {
+            Random rand = new Random();
+            gameId = "" + (rand.nextInt(8999999) + 1000000);
+        }
 
         setGameId(gameId);
     }

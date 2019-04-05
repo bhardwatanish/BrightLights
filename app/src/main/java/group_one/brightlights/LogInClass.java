@@ -86,8 +86,12 @@ public class LogInClass extends AppCompatActivity {
                     if(!user.isEmpty()){
                         User login = dataSnapshot.child(user).getValue(User.class);
 
-                        if(login.getPasswordR().equals(pwd))
+                        if(login.getPasswordR().equals(pwd)){
+
+                            Intent l=new Intent(getApplicationContext(), group_one.brightlights.MultiPlayerActivity.class);
+                            startActivity(l);
                             Toast.makeText(LogInClass.this, "Good Login", Toast.LENGTH_SHORT).show();
+                        }
                         else
                             Toast.makeText(LogInClass.this, "Wrong Pass bro", Toast.LENGTH_SHORT).show();
 
