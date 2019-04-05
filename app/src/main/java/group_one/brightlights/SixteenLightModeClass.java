@@ -98,7 +98,7 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                 count=-1;
         }
         count++;
-        scores.setText("SCORE: "+ count);
+        scores.setText("MOVES: "+ count);
     }
     private void setboardcolor(int i,int j){
         // Random rand = new Random();
@@ -123,8 +123,8 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
         setboardcolor(i,j);
     }
     private  void resetarray(){
-        for(int i=0;i<3;i++){
-            for(int j=0;j<3;j++){
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
                 setarray(i,j);
             }
         }

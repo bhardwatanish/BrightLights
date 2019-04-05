@@ -123,7 +123,7 @@ public class TwentyFiveLightClass extends AppCompatActivity implements View.OnCl
                 count=-1;
         }
         count++;
-        scores.setText("SCORE: "+ count);
+        scores.setText("MOVES: "+ count);
     }
     private void setboardcolor(int i,int j){
         // Random rand = new Random();

@@ -114,7 +114,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 toast.show();
         }
         count++;
-        scores.setText("SCORE: "+ count);
+        scores.setText("MOVES: "+ count);
     }
 
     private void setboardcolor(int i, int j) {

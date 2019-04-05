@@ -181,7 +181,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="33dp"
             android:textSize="30sp"
-            android:text="SCORE: 0" />
+            android:text="MOVES: 0" />
 
 
     </RelativeLayout>
