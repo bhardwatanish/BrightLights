@@ -12,7 +12,10 @@ import android.util.Log;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.Random;
 
 public class NineLightModeClass extends AppCompatActivity implements View.OnClickListener {
@@ -25,15 +28,14 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FirebaseDatabase.getInstance().getReference().child("games")
-                .child(gameId)
-                .setValue(null);
-
-        FirebaseDatabase.getInstance().getReference().child("games")
-                .child(gameId)
-                .child("RESET")
-                .setValue(System.currentTimeMillis());
-
+//        FirebaseDatabase.getInstance().getReference().child("games")
+//                .child(gameId)
+//                .setValue(null);
+//
+//        FirebaseDatabase.getInstance().getReference().child("games")
+//                .child(gameId)
+//                .child("RESET")
+//                .setValue(System.currentTimeMillis());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nine_light_mode);
@@ -44,7 +46,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
                 buttons[i][j] = findViewById(resID);
                 buttons[i][j].setOnClickListener(this);
-                setarray(i, j);
+                setarray(i, j, 0);
                 setboardcolor(i, j);
             }
         }
@@ -62,7 +64,10 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
         clicked[1][1] = 1;
 
+        setGameId(gameId);
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -111,6 +116,13 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
     }
 
+    private void saveboardstate(int col, int row) {
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .child(col + "_" + row)
+                .setValue("" + color[col][row]);
+    }
+
     private void setboardcolor(int i, int j) {
         // Random rand = new Random();
         // color[i][j]= rand.nextInt(2) + 0;
@@ -118,38 +130,26 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             buttons[i][j].setBackgroundColor(Color.parseColor("red"));
             buttons[i][j].setTextColor(Color.parseColor("red"));
             buttons[i][j].setText("x");
-            FirebaseDatabase.getInstance().getReference().child("games")
-                    .child(gameId)
-                    .child(i + "_" + j)
-                    .setValue("1");
 
         } else {
             buttons[i][j].setBackgroundColor(Color.parseColor("#a4c639"));
             buttons[i][j].setTextColor(Color.parseColor("#a4c639"));
             buttons[i][j].setText("0");
-            FirebaseDatabase.getInstance().getReference().child("games")
-                    .child(gameId)
-                    .child(i + "_" + j)
-                    .setValue("0");
         }
-
     }
 
-    private void setarray(int i, int j) {
+    private void setarray(int i, int j, int value) {
 //        Random rand = new Random();
         //color[i][j]= rand.nextInt(2) + 0;
-        color[i][j] = 1;
+        color[i][j] = value;
         setboardcolor(i, j);
     }
 
     private void resetarray() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                setarray(i, j);
-                FirebaseDatabase.getInstance().getReference().child("games")
-                        .child(gameId)
-                        .child(i + "_" + j)
-                        .setValue("0");
+                setarray(i, j, 0);
+                saveboardstate(i, j);
             }
         }
 
@@ -196,6 +196,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             for (int l = 0; l < 3; l++) {
 
                 setboardcolor(k, l);
+                saveboardstate(k, l);
             }
         }
 
@@ -229,6 +230,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             {2,	3,	0}, //25
             {1,	2,	0}, //26
     };
+
+
 
 
     private int do_move(){
@@ -339,52 +342,36 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     public void setGameId(String gameId) {
         this.gameId = gameId;
         Log.d(TAG, "setGameId: " + gameId);
-        FirebaseDatabase.getInstance().getReference().child("games")
-                .child(gameId)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
-                        if (dataSnapshot.getValue() == null) {
-                            return;
+
+        final int size = 3;
+
+        FirebaseDatabase.getInstance().getReference("games").child(gameId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Load the actual values from the DB into our board array
+                Log.d(TAG, "got new game state");
+
+                for (int row = 0; row < size; row++)
+                    for (int col = 0; col < size; col++)
+                    {
+                        String key = row + "_" + col;
+
+                        DataSnapshot ref = dataSnapshot.child(key);
+
+                        if (ref.exists()) {
+                            setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
+                        } else {
+                            setarray(row, col, 0);
                         }
-                        String key = dataSnapshot.getKey();
-                        if (!key.equals("RESET")) {
-                            int row = Integer.parseInt(key.substring(0, 1));
-                            int col = Integer.parseInt(key.substring(2, 3));
-                            Integer shape = dataSnapshot.getValue(Integer.class);
 
-
-                        }
+                        setboardcolor(row, col);
                     }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
-                        if (dataSnapshot.getValue() == null) {
-                            return;
-                        }
-                        if (dataSnapshot.getKey().equals("RESET")) {
-                            resetarray();
-
-                        }
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-
+            }
+        });
     }
 }
