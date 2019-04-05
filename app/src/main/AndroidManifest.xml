@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".NineLightModeClass"></activity>
         <activity android:name=".SixteenLightModeClass"></activity>
+        <activity android:name=".MakeLevel"></activity>
         <activity android:name=".TwentyFiveLights" />
         <activity android:name=".LogInClass" />
 
@@ -22,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
