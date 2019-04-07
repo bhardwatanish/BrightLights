@@ -23,6 +23,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private TextView textViewPlayer1;
     private int[][] color = new int[3][3];
     private int[][] clicked = new int[3][3];
+    private TextView scores;
+    private int count=0;
     private String gameId ="k6986774";
     private static final String TAG = "ColorCoding";
 
@@ -52,6 +54,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             }
         }
         setlevel();
+        scores = findViewById(R.id.score);
         Button reset;
         reset = (Button) findViewById(R.id.reset);
         reset.setOnClickListener(this);
@@ -120,6 +123,13 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                     break;
                 }
         }
+        count++;
+        scores.setText("MOVES: "+ count);
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .child("MOVES")
+                .setValue(count);
+
 
     }
 
