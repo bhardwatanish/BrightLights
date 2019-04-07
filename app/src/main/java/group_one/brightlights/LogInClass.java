@@ -88,7 +88,7 @@ public class LogInClass extends AppCompatActivity {
 
                         if(login.getPasswordR().equals(pwd)){
 
-                            Intent l=new Intent(getApplicationContext(), group_one.brightlights.MultiPlayerActivity.class);
+                            Intent l=new Intent(getApplicationContext(), group_one.brightlights.MultiMenuClass.class);
                             startActivity(l);
                             Toast.makeText(LogInClass.this, "Good Login", Toast.LENGTH_SHORT).show();
                         }

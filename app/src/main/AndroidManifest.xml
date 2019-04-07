@@ -15,7 +15,8 @@
         <activity android:name=".TwentyFiveLights" />
         <activity android:name=".LogInClass" />
         <activity android:name=".MultiPlayerActivity" />
-
+        <activity android:name=".MakeLevelMenuClass" />
+        <activity android:name=".MultiMenuClass" />
         <activity android:name=".LevelMenuClass">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
