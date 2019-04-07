@@ -20,20 +20,14 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
     private Button[][] buttons = new Button[4][4];
     private TextView textViewPlayer1;
     private int[][] color= new int[4][4];
+    private TextView scores;
+    private int count=0;
+    private int[][] clicked = new int[4][4];
     private String gameId ="16lights";
     private static final String TAG = "ColorCoding";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        FirebaseDatabase.getInstance().getReference().child("games")
-                .child(gameId)
-                .setValue(null);
-
-        FirebaseDatabase.getInstance().getReference().child("games")
-                .child(gameId)
-                .child("RESET")
-                .setValue(System.currentTimeMillis());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sixteen_light_mode);
         textViewPlayer1 = findViewById(R.id.text1);
@@ -48,12 +42,15 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
             }
         }
         setlevel();
+        scores = findViewById(R.id.score);
         Button reset;
         reset=(Button) findViewById(R.id.reset);
         reset.setOnClickListener(this);
         Button ss;
         ss=(Button) findViewById(R.id.ss);
         ss.setOnClickListener(this);
+
+
     }
 
     @Override
@@ -121,7 +118,12 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                     break;
                 }
         }
-
+        count++;
+        scores.setText("MOVES: "+ count);
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .child("MOVES")
+                .setValue(count);
     }
     private void setboardcolor(int i,int j){
         // Random rand = new Random();
