@@ -16,7 +16,7 @@
         <activity android:name=".MultiPlayerActivity" />
         <activity android:name=".MakeLevelMenuClass" />
         <activity android:name=".MultiMenuClass" />
-        <activity android:name=".NineLightModeClass">
+        <activity android:name=".NineLightModeClass" />
         <activity android:name=".LevelMenuClass">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
