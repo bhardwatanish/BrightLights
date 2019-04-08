@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".LevelMenuClass">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="2"></LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"></LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,10 +21,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="level 1"
+                android:text="Show Levels"
                 android:textSize="28dp"
-                android:id="@+id/l1"/>
+                android:id="@+id/show_levels"/>
         </RelativeLayout>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,40 +38,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="level 2"
+                android:text="Make Level"
                 android:textSize="28dp"
-                android:id="@+id/l2"/>
-        </RelativeLayout>
-    </LinearLayout><LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="level 3"
-            android:textSize="28dp"
-            android:id="@+id/l3"/>
-    </RelativeLayout>
-</LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text=" Multiplayer"
-                android:textSize="28dp"
-                android:id="@+id/multiBut"/>
+                android:id="@+id/make_level"/>
         </RelativeLayout>
 
     </LinearLayout>
