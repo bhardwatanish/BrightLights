@@ -107,11 +107,13 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                 break;
             case R.id.reset:
                 resetarray();
+                count = -1;
                 break;
             case R.id.ss:
                 if(!checkforwin()) {
                     int move = do_move();
 
+                    count += 2;
                     int x = move / 4;
                     int y = move - (x * 4);
                     swap(x, y);

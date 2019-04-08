@@ -144,12 +144,18 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.reset:
                 resetarray();
+                count = -1;
+                break;
             case R.id.ss:
-                int move = do_move();
+                if(!checkforwin()) {
+                    int move = do_move();
 
-                int x = move/5;
-                int y = move -(x * 5);
-                swap(x,y);
+                    count += 2;
+
+                    int x = move / 5;
+                    int y = move - (x * 5);
+                    swap(x, y);
+                }
                 break;
         }
         count++;

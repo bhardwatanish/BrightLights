@@ -75,6 +75,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
 
         setGameId(gameId);
+
+        resetarray();;
     }
 
 
@@ -113,10 +115,13 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.reset:
                 resetarray();
+                count = -1;
+                break;
             case R.id.ss:
                 if(!checkforwin()) {
                     int move = do_move();
 
+                    count +=2;
                     int x = move / 3;
                     int y = move - (x * 3);
                     swap(x, y);
