@@ -1,6 +1,11 @@
 package group_one.brightlights;
 
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,24 +30,25 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private int[][] clicked = new int[3][3];
     private TextView scores;
     private int count=0;
-    private String gameId ="k6986774";
+    private String gameId = " ";
     private static final String TAG = "ColorCoding";
+    boolean multiplayer = false;
+    private int[][] NonMuiplayerReset = new int[3][3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        FirebaseDatabase.getInstance().getReference().child("games")
-//                .child(gameId)
-//                .setValue(null);
-//
-//        FirebaseDatabase.getInstance().getReference().child("games")
-//                .child(gameId)
-//                .child("RESET")
-//                .setValue(System.currentTimeMillis());
+     FirebaseDatabase.getInstance().getReference().child("games")
+               .child(gameId)
+                .setValue(null);
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .child("RESET")
+                .setValue(System.currentTimeMillis());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nine_light_mode);
 
-        textViewPlayer1 = findViewById(R.id.text1);
+        //textViewPlayer1 = findViewById(R.id.text1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 String buttonID = "button_" + i + j;
@@ -53,6 +59,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 setboardcolor(i, j);
             }
         }
+
         setlevel();
         scores = findViewById(R.id.score);
         Button reset;
@@ -60,6 +67,10 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         reset.setOnClickListener(this);
         Button ss;
         ss = (Button) findViewById(R.id.ss);
+
+//        final MediaPlayer mp = MediaPlayer.create(this,R.raw.light);
+
+
         ss.setOnClickListener(this);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -68,15 +79,24 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
         clicked[1][1] = 1;
 
+
+
         gameId = getIntent().getExtras().getString("gameId");
         if (gameId == null) {
             Random rand = new Random();
             gameId = "" + (rand.nextInt(8999999) + 1000000);
+
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    NonMuiplayerReset[i][j] = color[i][j];
+                }
+            }
+        }else{
+            System.out.println("Multiplayer");
+            multiplayer = true;
+            setGameId(gameId);
         }
 
-        setGameId(gameId);
-
-        resetarray();;
     }
 
 
@@ -85,6 +105,10 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
 
         //if (((Button) v).getText().toString().equals("x")){
+      //  playSound(v);
+//        MediaPlayer mp = MediaPlayer.create(this,R.raw.light);
+//
+//        mp.start();
         switch (v.getId()) {
             case R.id.button_00:
                 swap(0, 0);
@@ -130,12 +154,11 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
         count++;
         scores.setText("MOVES: "+ count);
+
         FirebaseDatabase.getInstance().getReference().child("games")
                 .child(gameId)
                 .child("MOVES")
                 .setValue(count);
-
-
     }
 
     private void saveboardstate(int col, int row) {
@@ -168,15 +191,24 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     }
 
     private void resetarray() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                setarray(i, j, 0);
-                saveboardstate(i, j);
+        System.out.println("reseting array");
+
+        if(!multiplayer) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    setarray(i, j, 0);
+
+                    if(!multiplayer) {
+                        setarray(i,j,NonMuiplayerReset[i][j]);
+                        saveboardstate(i, j);
+                    }
+                }
             }
+        }else{
+            setGameId(gameId);
         }
+        count = 0;
 
-
-        setlevel();
     }
 
     private void swap(int i, int j) {
@@ -218,7 +250,9 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             for (int l = 0; l < 3; l++) {
 
                 setboardcolor(k, l);
-                saveboardstate(k, l);
+                if(!multiplayer) {
+                    saveboardstate(k, l);
+                }
             }
         }
 
@@ -367,33 +401,64 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
         final int size = 3;
 
-        FirebaseDatabase.getInstance().getReference("games").child(gameId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Load the actual values from the DB into our board array
-                Log.d(TAG, "got new game state");
+        if(!multiplayer) {
+            FirebaseDatabase.getInstance().getReference("games").child(gameId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Load the actual values from the DB into our board array
+                    Log.d(TAG, "got new game state");
 
-                for (int row = 0; row < size; row++)
-                    for (int col = 0; col < size; col++)
-                    {
-                        String key = row + "_" + col;
+                    for (int row = 0; row < size; row++)
+                        for (int col = 0; col < size; col++) {
+                            String key = row + "_" + col;
 
-                        DataSnapshot ref = dataSnapshot.child(key);
+                            DataSnapshot ref = dataSnapshot.child(key);
 
-                        if (ref.exists()) {
-                            setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
-                        } else {
-                            setarray(row, col, 0);
+                            if (ref.exists()) {
+                                setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
+                            } else {
+                                setarray(row, col, 0);
+                            }
+
+                            setboardcolor(row, col);
                         }
+                }
 
-                        setboardcolor(row, col);
-                    }
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+        else {
+            FirebaseDatabase.getInstance().getReference("games").child(gameId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Load the actual values from the DB into our board array
+                    Log.d(TAG, "got new game state");
 
-            }
-        });
+                    for (int row = 0; row < size; row++)
+                        for (int col = 0; col < size; col++) {
+                            String key = row + "_" + col;
+
+                            DataSnapshot ref = dataSnapshot.child(key);
+
+                            if (ref.exists()) {
+                                setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
+                            } else {
+                                setarray(row, col, 0);
+                            }
+
+                            setboardcolor(row, col);
+                        }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
     }
 }

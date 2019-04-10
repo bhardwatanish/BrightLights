@@ -12,17 +12,17 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level_menu);
-        Button l1,l2,l3,multiBut;
+        Button l1,l2,l3,multiBut,instruction;
         l1=(Button) findViewById(R.id.l1);
         l2=(Button) findViewById(R.id.l2);
         l3=(Button) findViewById(R.id.l3);
         multiBut = (Button) findViewById(R.id.multiBut);
+        instruction=(Button)findViewById(R.id.instruction);
         l1.setOnClickListener(this);
         l2.setOnClickListener(this);
         l3.setOnClickListener(this);
         multiBut.setOnClickListener(this);
-
-
+        instruction.setOnClickListener(this);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
                 startActivity(i);
                 break;
             case R.id.l2:
-                Intent j=new Intent(getApplicationContext(), group_one.brightlights.SixteenLightModeClass.class).putExtra("level",2);
+                Intent j=new Intent(getApplicationContext(), group_one.brightlights.SixteenLightModeClass.class).putExtra("level",1);
                 startActivity(j);
                 break;
             case R.id.l3:
@@ -43,6 +43,10 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
             case R.id.multiBut:
                 Intent m=new Intent(getApplicationContext(), group_one.brightlights.LogInClass.class);
                 startActivity(m);
+                break;
+            case R.id.instruction:
+                Intent n=new Intent(getApplicationContext(), group_one.brightlights.instructPg.class);
+                startActivity(n);
                 break;
         }
     }

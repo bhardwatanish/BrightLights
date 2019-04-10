@@ -5,20 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TwentyFiveLights">
+    tools:context=".TwentyFiveLights"
+    android:background="@drawable/gammm">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
+
+        <Button
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:id="@+id/text1"
-            android:textSize="40sp"
-            android:text="score : 0"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="33dp"
+            android:text="suggest"
+            android:textSize="30dp"
+            android:id="@+id/ss"
+            android:background="@drawable/box"
             />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:text="RESET"
@@ -26,17 +32,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:id="@+id/reset"
+            android:background="@drawable/box"
             />
-
-        <Button
-            android:id="@+id/ss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="163dp"
-            android:layout_marginEnd="160dp"
-            android:text="Button" />
 
 
     </RelativeLayout>
@@ -251,8 +248,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="33dp"
+            android:layout_marginLeft="125dp"
             android:textSize="30sp"
+            android:textColor="#000000"
             android:text="MOVES: 0" />
 
     </RelativeLayout>
