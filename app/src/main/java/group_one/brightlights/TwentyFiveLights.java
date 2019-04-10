@@ -13,6 +13,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
@@ -21,11 +22,13 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
     private Button[][] buttons = new Button[5][5];
     private TextView textViewPlayer1;
     private int[][] color= new int[5][5];
+    private int[][] clicked = new int[5][5];
     private TextView scores;
-    private int count=0;
-    private String gameId ="25lights";
+    private int count = 0;
+    private String gameId = " ";
     private static final String TAG = "ColorCoding";
-
+    boolean multiplayer = false;
+    private int[][] NonMuiplayerReset = new int[5][5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +41,10 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 .child(gameId)
                 .child("RESET")
                 .setValue(System.currentTimeMillis());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.twenty_five_light_mode);
+
       //  textViewPlayer1 = findViewById(R.id.text1);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -47,10 +52,11 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
                 buttons[i][j] = findViewById(resID);
                 buttons[i][j].setOnClickListener(this);
-                setarray(i,j);
+                setarray(i, j, 0);
                 setboardcolor(i,j);
             }
         }
+
         setlevel();
         scores = findViewById(R.id.score);
         Button reset;
@@ -61,6 +67,20 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
         ss.setOnClickListener(this);
 
 
+        gameId = getIntent().getExtras().getString("gameId");
+        if (gameId == null) {
+            Random rand = new Random();
+            gameId = "" + (rand.nextInt(8999999) + 1000000);
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    NonMuiplayerReset[i][j] = color[i][j];
+                }
+            }
+        }else{
+            System.out.println("Multiplayer");
+            multiplayer = true;
+            setGameId(gameId);
+        }
     }
 
     @Override
@@ -164,6 +184,107 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 .child(gameId)
                 .child("MOVES")
                 .setValue(count);
+
+    }
+
+    private void saveboardstate(int col, int row) {
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .child(col + "_" + row)
+                .setValue("" + color[col][row]);
+    }
+
+    private void setboardcolor(int i, int j) {
+        // Random rand = new Random();
+        // color[i][j]= rand.nextInt(2) + 0;
+        if (color[i][j] == 1) {
+            buttons[i][j].setBackgroundColor(Color.parseColor("red"));
+            buttons[i][j].setTextColor(Color.parseColor("red"));
+            buttons[i][j].setText("x");
+
+        } else {
+            buttons[i][j].setBackgroundColor(Color.parseColor("#a4c639"));
+            buttons[i][j].setTextColor(Color.parseColor("#a4c639"));
+            buttons[i][j].setText("0");
+        }
+    }
+
+    private void setarray(int i, int j, int value) {
+//        Random rand = new Random();
+        //color[i][j]= rand.nextInt(2) + 0;
+        color[i][j] = value;
+        setboardcolor(i, j);
+    }
+
+    private void resetarray() {
+        System.out.println("reseting array");
+
+        if(!multiplayer) {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    setarray(i, j, 0);
+
+                    if(!multiplayer) {
+                        setarray(i,j,NonMuiplayerReset[i][j]);
+                        saveboardstate(i, j);
+                    }
+                }
+            }
+        }else{
+            setGameId(gameId);
+        }
+        count = 0;
+    }
+
+    private void swap(int i,int j){
+        if(i-1>=0){
+            if (color[i-1][j]==1){
+                color[i-1][j]=0;
+            }
+            else{
+                color[i-1][j]=1;
+            }
+        }
+        if(i+1<=4){
+            if (color[i+1][j]==1){
+                color[i+1][j]=0;
+            }
+            else{
+                color[i+1][j]=1;
+            }
+        }
+        if(j-1>=0){
+            if (color[i][j-1]==1){
+                color[i][j-1]=0;
+            }
+            else{
+                color[i][j-1]=1;
+            }
+        }
+        if(j+1<=4){
+            if (color[i][j+1]==1){
+                color[i][j+1]=0;
+            }
+            else{
+                color[i][j+1]=1;
+            }
+        }
+        if (color[i][j]==1){
+            color[i][j]=0;
+        }
+        else{
+            color[i][j]=1;
+        }
+
+        for (int k = 0; k < 5; k++) {
+            for (int l = 0; l < 5; l++) {
+
+                setboardcolor(k,l);
+                if(!multiplayer) {
+                    saveboardstate(k, l);
+                }
+            }
+        }
 
     }
 
@@ -386,112 +507,11 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
         return -1;
     }
 
-    private void setboardcolor(int i,int j){
-        // Random rand = new Random();
-        // color[i][j]= rand.nextInt(2) + 0;
-        if(color[i][j]==1) {
-            buttons[i][j].setBackgroundColor(Color.parseColor("red"));
-            buttons[i][j].setTextColor(Color.parseColor("red"));
-            buttons[i][j].setText("x");
-            FirebaseDatabase.getInstance().getReference().child("games")
-                    .child(gameId)
-                    .child(i + "_" + j)
-                    .setValue("1");
-
-
-        }
-        else{
-            buttons[i][j].setBackgroundColor(Color.parseColor("#a4c639"));
-            buttons[i][j].setTextColor(Color.parseColor("#a4c639"));
-            buttons[i][j].setText("0");
-            FirebaseDatabase.getInstance().getReference().child("games")
-                    .child(gameId)
-                    .child(i + "_" + j)
-                    .setValue("0");
-        }
-
-    }
-    private void setarray(int i,int j){
-//        Random rand = new Random();
-        //color[i][j]= rand.nextInt(2) + 0;
-        color[i][j]=1;
-        setboardcolor(i,j);
-    }
-    private  void resetarray(){
-        for(int i=0;i<5;i++){
-            for(int j=0;j<5;j++){
-                setarray(i,j);
-            }
-        }
-        setlevel();
-    }
-
-    private void swap(int i,int j){
-        if(i-1>=0){
-            if (color[i-1][j]==1){
-                color[i-1][j]=0;
-            }
-            else{
-                color[i-1][j]=1;
-            }
-        }
-        if(i+1<=4){
-            if (color[i+1][j]==1){
-                color[i+1][j]=0;
-            }
-            else{
-                color[i+1][j]=1;
-            }
-        }
-        if(j-1>=0){
-            if (color[i][j-1]==1){
-                color[i][j-1]=0;
-            }
-            else{
-                color[i][j-1]=1;
-            }
-        }
-        if(j+1<=4){
-            if (color[i][j+1]==1){
-                color[i][j+1]=0;
-            }
-            else{
-                color[i][j+1]=1;
-            }
-        }
-        if (color[i][j]==1){
-            color[i][j]=0;
-        }
-        else{
-            color[i][j]=1;
-        }
-
-        for (int k = 0; k < 5; k++) {
-            for (int l = 0; l < 5; l++) {
-
-                setboardcolor(k,l);
-            }
-        }
-
-    }
-    private void  do_move(int min_rounds){
-        if(checkforwin()){
-            min_rounds++;
-        }
-        else{
-            for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++){
-                    swap(i,j);
-
-                }
-            }
-        }
-    }
     private boolean checkforwin(){
         int flag;
         flag=color[0][0];
-        for(int i=0;i<3;i++){
-            for(int j=0;j<3;j++){
+        for(int i=0;i<5;i++){
+            for(int j=0;j<5;j++){
                 if(flag!=color[i][j]){
                     return false;
                 }
@@ -513,52 +533,67 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
     public void setGameId(String gameId) {
         this.gameId = gameId;
         Log.d(TAG, "setGameId: " + gameId);
-        FirebaseDatabase.getInstance().getReference().child("games")
-                .child(gameId)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
-                        if (dataSnapshot.getValue() == null) {
-                            return;
+
+        final int size = 5;
+
+        if(!multiplayer) {
+            FirebaseDatabase.getInstance().getReference("games").child(gameId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Load the actual values from the DB into our board array
+                    Log.d(TAG, "got new game state");
+
+                    for (int row = 0; row < size; row++)
+                        for (int col = 0; col < size; col++) {
+                            String key = row + "_" + col;
+
+                            DataSnapshot ref = dataSnapshot.child(key);
+
+                            if (ref.exists()) {
+                                setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
+                            } else {
+                                setarray(row, col, 0);
+                            }
+
+                            setboardcolor(row, col);
                         }
-                        String key = dataSnapshot.getKey();
-                        if (!key.equals("RESET")) {
-                            int row = Integer.parseInt(key.substring(0, 1));
-                            int col = Integer.parseInt(key.substring(2, 3));
-                            Integer shape = dataSnapshot.getValue(Integer.class);
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                }
+            });
+        }
+        else {
+            FirebaseDatabase.getInstance().getReference("games").child(gameId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Load the actual values from the DB into our board array
+                    Log.d(TAG, "got new game state");
+
+                    for (int row = 0; row < size; row++)
+                        for (int col = 0; col < size; col++) {
+                            String key = row + "_" + col;
+
+                            DataSnapshot ref = dataSnapshot.child(key);
+
+                            if (ref.exists()) {
+                                setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
+                            } else {
+                                setarray(row, col, 0);
+                            }
+
+                            setboardcolor(row, col);
                         }
-                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
-                        if (dataSnapshot.getValue() == null) {
-                            return;
-                        }
-                        if (dataSnapshot.getKey().equals("RESET")) {
-                            resetarray();
-
-                        }
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
+                }
+            });
+        }
 
     }
 

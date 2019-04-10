@@ -23,8 +23,6 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
         l3.setOnClickListener(this);
         multiBut.setOnClickListener(this);
         instruction.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -35,7 +33,7 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
                 startActivity(i);
                 break;
             case R.id.l2:
-                Intent j=new Intent(getApplicationContext(), group_one.brightlights.SixteenLightModeClass.class).putExtra("level",2);
+                Intent j=new Intent(getApplicationContext(), group_one.brightlights.SixteenLightModeClass.class).putExtra("level",1);
                 startActivity(j);
                 break;
             case R.id.l3:
