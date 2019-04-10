@@ -150,6 +150,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                     int y = move - (x * 3);
                     swap(x, y);
                     break;
+
                 }
                 else
                     Toast.makeText(getApplicationContext(), "Sorry no cheating", Toast.LENGTH_SHORT).show();
