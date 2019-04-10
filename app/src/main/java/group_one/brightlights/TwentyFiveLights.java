@@ -40,7 +40,7 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 .setValue(System.currentTimeMillis());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.twenty_five_light_mode);
-        textViewPlayer1 = findViewById(R.id.text1);
+      //  textViewPlayer1 = findViewById(R.id.text1);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 String buttonID = "button_" + i + j;

@@ -1,6 +1,11 @@
 package group_one.brightlights;
 
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,21 +33,21 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private String gameId ="k6986774";
     private static final String TAG = "ColorCoding";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        FirebaseDatabase.getInstance().getReference().child("games")
-//                .child(gameId)
-//                .setValue(null);
-//
-//        FirebaseDatabase.getInstance().getReference().child("games")
-//                .child(gameId)
-//                .child("RESET")
-//                .setValue(System.currentTimeMillis());
+     FirebaseDatabase.getInstance().getReference().child("games")
+               .child(gameId)
+                .setValue(null);
+        FirebaseDatabase.getInstance().getReference().child("games")
+                .child(gameId)
+                .child("RESET")
+                .setValue(System.currentTimeMillis());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nine_light_mode);
 
-        textViewPlayer1 = findViewById(R.id.text1);
+        //textViewPlayer1 = findViewById(R.id.text1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 String buttonID = "button_" + i + j;
@@ -53,6 +58,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 setboardcolor(i, j);
             }
         }
+
         setlevel();
         scores = findViewById(R.id.score);
         Button reset;
@@ -60,6 +66,10 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         reset.setOnClickListener(this);
         Button ss;
         ss = (Button) findViewById(R.id.ss);
+
+//        final MediaPlayer mp = MediaPlayer.create(this,R.raw.light);
+
+
         ss.setOnClickListener(this);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -67,6 +77,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             }
         }
         clicked[1][1] = 1;
+
+
 
         gameId = getIntent().getExtras().getString("gameId");
         if (gameId == null) {
@@ -85,6 +97,10 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
 
         //if (((Button) v).getText().toString().equals("x")){
+      //  playSound(v);
+//        MediaPlayer mp = MediaPlayer.create(this,R.raw.light);
+//
+//        mp.start();
         switch (v.getId()) {
             case R.id.button_00:
                 swap(0, 0);
@@ -178,6 +194,9 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
         setlevel();
     }
+
+
+
 
     private void swap(int i, int j) {
         if (i - 1 >= 0) {

@@ -27,7 +27,7 @@ public class LogInClass extends AppCompatActivity {
     EditText User,Password;
 
     Button SignUpBTN, SignInBTN;
-    private Button testButton;
+   // private Button testButton;
 
     FirebaseDatabase database;
     DatabaseReference users,moves;
@@ -41,13 +41,13 @@ public class LogInClass extends AppCompatActivity {
         setContentView(R.layout.log_in_layout);
 
         //Test Button
-        testButton = (Button) findViewById(R.id.testactivity);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openTestActivity();
-            }
-        });
+//        testButton = (Button) findViewById(R.id.testactivity);
+//        testButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openTestActivity();
+//            }
+//        });
 
         //Firebase
         database =FirebaseDatabase.getInstance();
@@ -165,12 +165,12 @@ public class LogInClass extends AppCompatActivity {
         alertDialog.show();
     }
 
-
-    //open Network Testing
-    public void openTestActivity(){
-        Intent gototest = new Intent(this, group_one.brightlights.DatabaseTestClass.class);
-        startActivity(gototest);
-    }
+//
+//    //open Network Testing
+//    public void openTestActivity(){
+//        Intent gototest = new Intent(this, group_one.brightlights.DatabaseTestClass.class);
+//        startActivity(gototest);
+//    }
 
 
 }

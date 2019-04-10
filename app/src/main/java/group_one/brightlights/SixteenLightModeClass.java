@@ -30,7 +30,7 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sixteen_light_mode);
-        textViewPlayer1 = findViewById(R.id.text1);
+       // textViewPlayer1 = findViewById(R.id.text1);
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 String buttonID = "button_" + i + j;
