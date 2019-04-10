@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -62,6 +63,7 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
         Button reset;
         reset=(Button) findViewById(R.id.reset);
         reset.setOnClickListener(this);
+
         Button ss;
         ss=(Button) findViewById(R.id.ss);
         ss.setOnClickListener(this);
@@ -167,7 +169,7 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 count = -1;
                 break;
             case R.id.ss:
-                if(!checkforwin()) {
+                if(!checkforwin() && multiplayer == false) {
                     int move = do_move();
 
                     count += 2;
@@ -176,6 +178,8 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                     int y = move - (x * 5);
                     swap(x, y);
                 }
+                else
+                    Toast.makeText(getApplicationContext(), "Sorry no cheating", Toast.LENGTH_SHORT).show();
                 break;
         }
         count++;

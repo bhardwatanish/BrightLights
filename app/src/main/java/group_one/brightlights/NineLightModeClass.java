@@ -142,7 +142,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 count = -1;
                 break;
             case R.id.ss:
-                if(!checkforwin()) {
+                if(!checkforwin()&& multiplayer == false) {
                     int move = do_move();
 
                     count +=2;
@@ -151,6 +151,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                     swap(x, y);
                     break;
                 }
+                else
+                    Toast.makeText(getApplicationContext(), "Sorry no cheating", Toast.LENGTH_SHORT).show();
         }
         count++;
         scores.setText("MOVES: "+ count);

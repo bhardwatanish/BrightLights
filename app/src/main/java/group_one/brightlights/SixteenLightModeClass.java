@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -144,7 +146,7 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                 count = -1;
                 break;
             case R.id.s1:
-                if(!checkforwin()) {
+                if(!checkforwin() && multiplayer == false) {
                     int move = do_move();
 
                     count += 2;
@@ -153,6 +155,8 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                     swap(x, y);
                     break;
                 }
+                else
+                    Toast.makeText(getApplicationContext(), "Sorry no cheating", Toast.LENGTH_SHORT).show();
         }
         count++;
         scores.setText("MOVES: "+ count);
