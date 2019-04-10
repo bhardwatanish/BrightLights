@@ -30,9 +30,10 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private int[][] clicked = new int[3][3];
     private TextView scores;
     private int count=0;
-    private String gameId ="k6986774";
+    private String gameId = " ";
     private static final String TAG = "ColorCoding";
-
+    boolean multiplayer = false;
+    private int[][] NonMuiplayerReset = new int[3][3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,11 +85,18 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         if (gameId == null) {
             Random rand = new Random();
             gameId = "" + (rand.nextInt(8999999) + 1000000);
+
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    NonMuiplayerReset[i][j] = color[i][j];
+                }
+            }
+        }else{
+            System.out.println("Multiplayer");
+            multiplayer = true;
+            setGameId(gameId);
         }
 
-        setGameId(gameId);
-
-        resetarray();;
     }
 
 
@@ -146,12 +154,11 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
         }
         count++;
         scores.setText("MOVES: "+ count);
+
         FirebaseDatabase.getInstance().getReference().child("games")
                 .child(gameId)
                 .child("MOVES")
                 .setValue(count);
-
-
     }
 
     private void saveboardstate(int col, int row) {
@@ -184,19 +191,25 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     }
 
     private void resetarray() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                setarray(i, j, 0);
-                saveboardstate(i, j);
+        System.out.println("reseting array");
+
+        if(!multiplayer) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    setarray(i, j, 0);
+
+                    if(!multiplayer) {
+                        setarray(i,j,NonMuiplayerReset[i][j]);
+                        saveboardstate(i, j);
+                    }
+                }
             }
+        }else{
+            setGameId(gameId);
         }
+        count = 0;
 
-
-        setlevel();
     }
-
-
-
 
     private void swap(int i, int j) {
         if (i - 1 >= 0) {
@@ -237,7 +250,9 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
             for (int l = 0; l < 3; l++) {
 
                 setboardcolor(k, l);
-                saveboardstate(k, l);
+                if(!multiplayer) {
+                    saveboardstate(k, l);
+                }
             }
         }
 
@@ -386,33 +401,64 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
         final int size = 3;
 
-        FirebaseDatabase.getInstance().getReference("games").child(gameId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Load the actual values from the DB into our board array
-                Log.d(TAG, "got new game state");
+        if(!multiplayer) {
+            FirebaseDatabase.getInstance().getReference("games").child(gameId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Load the actual values from the DB into our board array
+                    Log.d(TAG, "got new game state");
 
-                for (int row = 0; row < size; row++)
-                    for (int col = 0; col < size; col++)
-                    {
-                        String key = row + "_" + col;
+                    for (int row = 0; row < size; row++)
+                        for (int col = 0; col < size; col++) {
+                            String key = row + "_" + col;
 
-                        DataSnapshot ref = dataSnapshot.child(key);
+                            DataSnapshot ref = dataSnapshot.child(key);
 
-                        if (ref.exists()) {
-                            setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
-                        } else {
-                            setarray(row, col, 0);
+                            if (ref.exists()) {
+                                setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
+                            } else {
+                                setarray(row, col, 0);
+                            }
+
+                            setboardcolor(row, col);
                         }
+                }
 
-                        setboardcolor(row, col);
-                    }
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+        else {
+            FirebaseDatabase.getInstance().getReference("games").child(gameId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Load the actual values from the DB into our board array
+                    Log.d(TAG, "got new game state");
 
-            }
-        });
+                    for (int row = 0; row < size; row++)
+                        for (int col = 0; col < size; col++) {
+                            String key = row + "_" + col;
+
+                            DataSnapshot ref = dataSnapshot.child(key);
+
+                            if (ref.exists()) {
+                                setarray(row, col, Integer.parseInt(ref.getValue(String.class)));
+                            } else {
+                                setarray(row, col, 0);
+                            }
+
+                            setboardcolor(row, col);
+                        }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
     }
 }
