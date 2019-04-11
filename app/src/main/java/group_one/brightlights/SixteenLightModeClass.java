@@ -1,11 +1,16 @@
 package group_one.brightlights;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Random;
 
 
-public class SixteenLightModeClass extends AppCompatActivity implements View.OnClickListener {
+public class SixteenLightModeClass extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private Button[][] buttons = new Button[4][4];
     private TextView textViewPlayer1;
@@ -31,6 +36,7 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
     private static final String TAG = "ColorCoding";
     boolean multiplayer = false;
     private int[][] NonMuiplayerReset = new int[4][4];
+    private int level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +95,30 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
         setboardcolor(i, j);
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.activity_menu_main, popup.getMenu());
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.stats:
+                if(multiplayer){
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.MultiMenuClass.class);
+                    startActivity(i);
+                }else {
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.LevelMenuClass.class);
+                    startActivity(i);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onClick(View v) {
         //if (((Button) v).getText().toString().equals("x")){
@@ -155,8 +185,10 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                     swap(x, y);
                     break;
                 }
-                else
+                else {
                     Toast.makeText(getApplicationContext(), "Sorry no cheating", Toast.LENGTH_SHORT).show();
+                    count--;
+                }
         }
         count++;
         scores.setText("MOVES: "+ count);
@@ -164,6 +196,8 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                 .child(gameId)
                 .child("MOVES")
                 .setValue(count);
+
+        checkforwin();
     }
 
     private void saveboardstate(int col, int row) {
@@ -272,14 +306,33 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
                 }
             }
         }
+        if(!multiplayer) {
+            Toast.makeText(getApplicationContext(), "Congrats now onto the next one", Toast.LENGTH_SHORT).show();
+        }
+        //Add short delay after you win a game
+        final Handler delay = new Handler();
+        delay.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(multiplayer){
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.MultiPlayerActivity.class);
+                    startActivity(i);
+                }else {
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.TwentyFiveLights.class).putExtra("level", level);
+                    startActivity(i);
+                }
+            }
+        }, 2000);
+
+
         return true;
     }
 
     private  void setlevel(){
-        int k= (int) getIntent().getIntExtra("level",0);
-        //int k=Integer.parseInt(s);
+        level = (int) getIntent().getIntExtra("level",0);
+
         Random rand = new Random();
-        for(int l=0;l<k;l++){
+        for(int l=0;l<level;l++){
             int i= rand.nextInt(4) + 0;
             int j= rand.nextInt(4) + 0;
             swap(i,j);}
@@ -498,4 +551,8 @@ public class SixteenLightModeClass extends AppCompatActivity implements View.OnC
         }
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }

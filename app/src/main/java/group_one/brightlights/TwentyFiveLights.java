@@ -1,12 +1,18 @@
 package group_one.brightlights;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
-public class TwentyFiveLights extends AppCompatActivity implements View.OnClickListener {
+public class TwentyFiveLights extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private Button[][] buttons = new Button[5][5];
     private TextView textViewPlayer1;
@@ -30,6 +36,7 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
     private static final String TAG = "ColorCoding";
     boolean multiplayer = false;
     private int[][] NonMuiplayerReset = new int[5][5];
+    private int level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,30 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.activity_menu_main, popup.getMenu());
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.stats:
+                if(multiplayer){
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.MultiMenuClass.class);
+                    startActivity(i);
+                }else {
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.LevelMenuClass.class);
+                    startActivity(i);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onClick(View v) {
         //if (((Button) v).getText().toString().equals("x")){
@@ -178,8 +209,10 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                     int y = move - (x * 5);
                     swap(x, y);
                 }
-                else
+                else {
                     Toast.makeText(getApplicationContext(), "Sorry no cheating", Toast.LENGTH_SHORT).show();
+                    count--;
+                }
                 break;
         }
         count++;
@@ -188,6 +221,8 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 .child(gameId)
                 .child("MOVES")
                 .setValue(count);
+
+        checkforwin();
 
     }
 
@@ -521,13 +556,34 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
                 }
             }
         }
+
+        if(!multiplayer) {
+            Toast.makeText(getApplicationContext(), "Congrats on completing level " + level, Toast.LENGTH_SHORT).show();
+        }
+
+        //Add short delay after you win a game
+        final Handler delay = new Handler();
+        delay.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(multiplayer){
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.MultiPlayerActivity.class);
+                    startActivity(i);
+                }else {
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.LevelMenuClass.class);
+                    startActivity(i);
+                }
+            }
+        }, 2000);
+
+
         return true;
     }
     private  void setlevel(){
-        int k= (int) getIntent().getIntExtra("level",0);
-        //int k=Integer.parseInt(s);
+        level = (int) getIntent().getIntExtra("level",0);
+
         Random rand = new Random();
-        for(int l=0;l<k*2;l++){
+        for(int l=0;l<level*2;l++){
             int i= rand.nextInt(5) + 0;
             int j= rand.nextInt(5) + 0;
             swap(i,j);}
@@ -601,4 +657,8 @@ public class TwentyFiveLights extends AppCompatActivity implements View.OnClickL
 
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }
