@@ -3,8 +3,12 @@ package group_one.brightlights;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 
 public class LevelMenuClass extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,6 +29,14 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
         instruction.setOnClickListener(this);
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.activity_menu_main, popup.getMenu());
+        popup.show();
+    }
+
+
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -33,11 +45,11 @@ public class LevelMenuClass extends AppCompatActivity implements View.OnClickLis
                 startActivity(i);
                 break;
             case R.id.l2:
-                Intent j=new Intent(getApplicationContext(), group_one.brightlights.SixteenLightModeClass.class).putExtra("level",1);
+                Intent j=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",2);
                 startActivity(j);
                 break;
             case R.id.l3:
-                Intent k=new Intent(getApplicationContext(), group_one.brightlights.TwentyFiveLights.class).putExtra("level",3);
+                Intent k=new Intent(getApplicationContext(), group_one.brightlights.NineLightModeClass.class).putExtra("level",3);
                 startActivity(k);
                 break;
             case R.id.multiBut:

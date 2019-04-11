@@ -1,16 +1,21 @@
 package group_one.brightlights;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
@@ -23,7 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
-public class NineLightModeClass extends AppCompatActivity implements View.OnClickListener {
+public class NineLightModeClass extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+
     private Button[][] buttons = new Button[3][3];
     private TextView textViewPlayer1;
     private int[][] color = new int[3][3];
@@ -34,6 +40,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
     private static final String TAG = "ColorCoding";
     boolean multiplayer = false;
     private int[][] NonMuiplayerReset = new int[3][3];
+    private int level_run;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +106,31 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.activity_menu_main, popup.getMenu());
+        popup.show();
+    }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.stats:
+                System.out.println("messgaes");
+                if(multiplayer){
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.MultiMenuClass.class);
+                    startActivity(i);
+                }else {
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.LevelMenuClass.class);
+                    startActivity(i);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -109,6 +140,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
 //        MediaPlayer mp = MediaPlayer.create(this,R.raw.light);
 //
 //        mp.start();
+
         switch (v.getId()) {
             case R.id.button_00:
                 swap(0, 0);
@@ -142,7 +174,7 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 count = -1;
                 break;
             case R.id.ss:
-                if(!checkforwin()) {
+                if(!checkforwin()&& multiplayer == false) {
                     int move = do_move();
 
                     count +=2;
@@ -150,6 +182,11 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                     int y = move - (x * 3);
                     swap(x, y);
                     break;
+
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Sorry no cheating", Toast.LENGTH_SHORT).show();
+                    count--;
                 }
         }
         count++;
@@ -159,6 +196,8 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 .child(gameId)
                 .child("MOVES")
                 .setValue(count);
+
+        checkforwin();
     }
 
     private void saveboardstate(int col, int row) {
@@ -380,14 +419,37 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 }
             }
         }
+
+        if(!multiplayer) {
+            Toast.makeText(getApplicationContext(), "Congrats now onto the next one", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Well done", Toast.LENGTH_SHORT).show();
+        }
+
+        //Add short delay after you win a game
+        final Handler delay = new Handler();
+        delay.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(multiplayer){
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.MultiPlayerActivity.class);
+                    startActivity(i);
+                }else {
+                    Intent i = new Intent(getApplicationContext(), group_one.brightlights.SixteenLightModeClass.class).putExtra("level", level_run);
+                    startActivity(i);
+                }
+            }
+        }, 2000);
+
+
         return true;
     }
 
     private void setlevel() {
-        int k = (int) getIntent().getIntExtra("level", 0);
-        //int k=Integer.parseInt(s);
+        level_run = (int) getIntent().getIntExtra("level", 0);
+
         Random rand = new Random();
-        for (int l = 0; l < k; l++) {
+        for (int l = 0; l < level_run; l++) {
             int i = rand.nextInt(3);
             int j = rand.nextInt(3);
             swap(i, j);
@@ -459,6 +521,11 @@ public class NineLightModeClass extends AppCompatActivity implements View.OnClic
                 }
             });
         }
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 }

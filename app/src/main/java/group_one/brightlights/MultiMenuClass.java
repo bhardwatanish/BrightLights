@@ -12,11 +12,13 @@ public class MultiMenuClass extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multi_menu);
-        Button make_level, show_levels;
+        Button make_level, show_levels, Main_menu;
         make_level =(Button) findViewById(R.id.make_level);
         show_levels = (Button) findViewById(R.id.show_levels);
+        Main_menu = (Button) findViewById(R.id.main_menu);
         make_level.setOnClickListener(this);
         show_levels.setOnClickListener(this);
+        Main_menu.setOnClickListener(this);
     }
 
     @Override
@@ -29,6 +31,10 @@ public class MultiMenuClass extends AppCompatActivity implements View.OnClickLis
             case R.id.show_levels:
                 Intent m=new Intent(getApplicationContext(), group_one.brightlights.MultiPlayerActivity.class);
                 startActivity(m);
+                break;
+            case R.id.main_menu:
+                Intent k =new Intent(getApplicationContext(), group_one.brightlights.LevelMenuClass.class);
+                startActivity(k);
                 break;
         }
     }

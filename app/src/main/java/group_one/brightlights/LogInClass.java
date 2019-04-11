@@ -2,8 +2,10 @@ package group_one.brightlights;
 
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -163,6 +165,51 @@ public class LogInClass extends AppCompatActivity {
             }
         });
         alertDialog.show();
+    }
+
+    private static final String PREFS_NAME = "preferences";
+    private static final String PREF_UNAME = "Username";
+    private static final String PREF_PASSWORD = "Password";
+
+    private final String DefaultUnameValue = "";
+    private String UnameValue;
+
+    private final String DefaultPasswordValue = "";
+    private String PasswordValue;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        savePreferences();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPreferences();
+    }
+
+    private void savePreferences() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        UnameValue = User.getText().toString();
+        PasswordValue = Password.getText().toString();
+        editor.putString(PREF_UNAME, UnameValue);
+        editor.putString(PREF_PASSWORD, PasswordValue);
+        editor.commit();
+    }
+
+    private void loadPreferences() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME,
+                Context.MODE_PRIVATE);
+
+        UnameValue = settings.getString(PREF_UNAME, DefaultUnameValue);
+        PasswordValue = settings.getString(PREF_PASSWORD, DefaultPasswordValue);
+        User.setText(UnameValue);
+        Password.setText(PasswordValue);
     }
 
 //
