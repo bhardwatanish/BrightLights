@@ -18,8 +18,8 @@
         <activity android:name=".NineLightModeClass"></activity>
         <activity android:name=".InstructPg2"></activity>
         <activity android:name=".instructPg3"></activity>
-        <activity android:name=".MakeLevelMenuClass"></activity>
         <activity android:name=".MultiMenuClass"></activity>
+        <activity android:name=".MakeLevelMenuClass"></activity>
         <activity android:name=".SixteenLightModeClass"></activity>
         <activity android:name=".LevelMenuClass"></activity>
         <activity android:name=".HomeActivity">
